@@ -1,3 +1,239 @@
-Test
-another line
-third line
+package com.tiempodevelopment.ui;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.border.EmptyBorder;
+
+import com.tiempodevelopment.App;
+import com.tiempodevelopment.controller.MainController;
+
+public class MainWindow extends JFrame {
+	
+	private static final long serialVersionUID = 1L;
+	JButton usersBt;
+	JButton categoryBt;
+	JButton productBt;
+	JButton logoutBt;
+	JButton purchaseOrdersBt;
+	JLabel titleLbl;
+	JLabel catalogsLbl;
+	JLabel operationsLbl;
+	JLabel dateLbl;
+	JLabel timeLbl;
+	JLabel lblLoggedAs;
+	JLabel lblUsername;
+	MainController mainController;
+	private JPanel panel;
+	
+	public MainWindow(){
+		super("Pharmacy POS Dashboard");
+		this.init();
+	}
+	
+	private void init(){
+		titleLbl = new JLabel("Pharmacy POS");
+	    catalogsLbl = new JLabel("Catalogs");
+		operationsLbl = new JLabel("Operations");
+		usersBt = new JButton("Users");
+		categoryBt = new JButton("Categories / Sub Categories");
+		productBt = new JButton("Products");
+		logoutBt = new JButton("Logout");
+		purchaseOrdersBt = new JButton("Purchase Orders");
+		lblLoggedAs = new JLabel("Welcome, ");
+		lblUsername = new JLabel();
+		
+		titleLbl.setHorizontalAlignment(JLabel.LEFT);
+		titleLbl.setFont(new Font(this.titleLbl.getName(), Font.PLAIN, 30));
+
+		catalogsLbl.setFont(new Font(this.titleLbl.getName(), Font.PLAIN, 20));
+
+		operationsLbl.setFont(new Font(this.titleLbl.getName(), Font.PLAIN, 20));
+
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(500, 500);
+		
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(createUserInfoPanel(), BorderLayout.NORTH);
+		getContentPane().add(createMenuPanel(), BorderLayout.CENTER);
+		getContentPane().add(createInfoPanel(), BorderLayout.SOUTH);
+
+		setLocationRelativeTo(null);
+	}
+	
+	public void showWindow(){
+		lblUsername.setText(App.currentUser.getUsername());
+		setVisible(true);
+	}
+	
+	private void closeWindow(){
+		this.setVisible(false);
+		dispatchEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSED));
+		App.loginWindow.showLogin();
+	}
+	
+	private JPanel createMenuPanel(){
+		
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+		
+		JPanel menuPanel = new JPanel();
+		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+			
+		menuPanel.add(createCatalogsButtonsPanel());
+		menuPanel.add(createOperationsButtonsPanel());	
+		menuPanel.setBackground(Color.white);
+		
+		mainPanel.add(titleLbl, BorderLayout.NORTH);
+		mainPanel.add(menuPanel, BorderLayout.CENTER);
+		mainPanel.setBackground(Color.white);
+		mainPanel.setBorder(new EmptyBorder(5, 10, 5, 5));
+		
+		Dimension d = new Dimension(100, 100);
+		mainPanel.setMaximumSize(d);
+		return mainPanel;
+	}
+	
+	
+	private JPanel createCatalogsButtonsPanel(){
+		
+		JPanel catalogsPanel = new JPanel();
+		catalogsPanel.setLayout(new BorderLayout());
+		
+		JPanel buttonsPanel = new JPanel();
+		buttonsPanel.setLayout(new BorderLayout());
+		
+		JPanel innerBttnPnl = new JPanel();
+		innerBttnPnl.setLayout(new BoxLayout(innerBttnPnl, BoxLayout.Y_AXIS));
+		
+		logoutBt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				closeWindow();
+			}
+		});
+		
+		usersBt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				App.userWindow.showWindow();
+			}
+		});
+		
+		productBt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				App.productController.fillTable();
+			}
+		});
+		
+		categoryBt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				App.categoryController.processAction();
+			}
+		});
+		
+		
+		Dimension d = categoryBt.getMaximumSize();
+		
+		categoryBt.setAlignmentX(Component.CENTER_ALIGNMENT);
+		innerBttnPnl.add(Box.createVerticalStrut(20));
+		innerBttnPnl.add(categoryBt);
+		
+		usersBt.setMaximumSize(d);
+		usersBt.setAlignmentX(Component.CENTER_ALIGNMENT);
+		innerBttnPnl.add(Box.createVerticalStrut(20));
+		innerBttnPnl.add(usersBt);
+				
+		productBt.setMaximumSize(d);
+		productBt.setAlignmentX(Component.CENTER_ALIGNMENT);
+		innerBttnPnl.add(Box.createVerticalStrut(20));
+		innerBttnPnl.add(productBt);
+		innerBttnPnl.setBackground(Color.white);
+		
+		buttonsPanel.add(innerBttnPnl, BorderLayout.CENTER);
+		buttonsPanel.setBackground(Color.white);
+		
+		catalogsPanel.add(catalogsLbl, BorderLayout.NORTH);
+		catalogsPanel.add(buttonsPanel, BorderLayout.CENTER);
+		
+		catalogsPanel.setBorder(new EmptyBorder(5, 10, 5, 5));
+		catalogsPanel.setBackground(Color.white);
+		return catalogsPanel;
+	}
+	
+
+	private JPanel createOperationsButtonsPanel(){
+		
+		JPanel operationsPanel = new JPanel();
+		operationsPanel.setLayout(new BorderLayout());
+		
+		JPanel buttonsPanel = new JPanel();
+		buttonsPanel.setLayout(new BorderLayout());
+		
+		JPanel innerBttnPnl = new JPanel();
+		innerBttnPnl.setLayout(new BoxLayout(innerBttnPnl, BoxLayout.Y_AXIS));
+		
+		Dimension d = categoryBt.getMaximumSize();
+		
+		purchaseOrdersBt.setMaximumSize(d);
+		purchaseOrdersBt.setAlignmentX(Component.CENTER_ALIGNMENT);
+		innerBttnPnl.add(purchaseOrdersBt);
+		innerBttnPnl.setBackground(Color.white);
+		
+		buttonsPanel.add(innerBttnPnl, BorderLayout.CENTER);
+		buttonsPanel.setBackground(Color.white);
+		
+		operationsPanel.add(operationsLbl, BorderLayout.NORTH);
+		operationsPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+		operationsPanel.add(buttonsPanel, BorderLayout.CENTER);
+		
+		operationsPanel.setBorder(new EmptyBorder(5, 10, 5, 5));
+		operationsPanel.setBackground(Color.white);
+		return operationsPanel;
+	}
+	
+	private JPanel createInfoPanel(){
+		JPanel datePnl = new JPanel();
+		datePnl.setLayout(new BorderLayout());
+		
+		DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy");
+		DateFormat timeFormat = new SimpleDateFormat("hh:mm aa");
+		Date date = new Date();
+		this.dateLbl = new JLabel(dateFormat.format(date));
+		this.timeLbl = new JLabel(timeFormat.format(date));
+		
+		datePnl.add(dateLbl, BorderLayout.WEST);
+		datePnl.add(timeLbl, BorderLayout.EAST);
+		datePnl.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
+		datePnl.setBackground(Color.white);
+		return datePnl;
+	}
+	
+	private JPanel createUserInfoPanel(){
+		JPanel userInfopanel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) userInfopanel.getLayout();
+		flowLayout.setAlignment(FlowLayout.RIGHT);
+		getContentPane().add(userInfopanel);
+		userInfopanel.add(lblLoggedAs);
+		userInfopanel.add(lblUsername);
+		userInfopanel.setBackground(Color.white);
+		return userInfopanel;
+	}
+	
+}
