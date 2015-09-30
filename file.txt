@@ -1,9 +1,9 @@
+
+
 package com.tiempodevelopment.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -11,28 +11,24 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar.Separator;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import com.tiempodevelopment.App;
 import com.tiempodevelopment.controller.MainController;
-import com.tiempodevelopment.entities.User;
 
 public class MainWindow extends JFrame {
 	
@@ -197,8 +193,11 @@ public class MainWindow extends JFrame {
 		
 		datePnl.add(dateLbl, BorderLayout.WEST);
 		datePnl.add(timeLbl, BorderLayout.EAST);
-		datePnl.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
+//		datePnl.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black));
+		Border border = BorderFactory.createMatteBorder(1, 0, 0, 0, Color.black);
+		Border margin =  new EmptyBorder(1,5,1,5);
 		datePnl.setBackground(Color.white);
+		datePnl.setBorder(new CompoundBorder(border, margin));
 		return datePnl;
 	}
 	
